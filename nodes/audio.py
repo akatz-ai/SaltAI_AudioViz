@@ -251,12 +251,9 @@ class SaltAudioFramesyncSchedule:
         total_length_ms = len(audio_segment)
         total_frames = total_length_ms // frame_duration_ms
         end_ms = total_length_ms if end_frame <= 0 else min(end_frame * frame_duration_ms, total_length_ms)
-        print(f"start_ms: {start_ms}, end_ms: {end_ms}, total_length_ms: {total_length_ms}, total_frames: {total_frames}, frame_duration_ms: {frame_duration_ms}")
 
         audio_segment = audio_segment[start_ms:end_ms]
         dbfs_min, dbfs_max = self.dbfs_floor_ceiling(audio_segment)
-        
-        print(f"dbfs_min: {dbfs_min}, dbfs_max: {dbfs_max}")
 
         output = {'average': {'sum': []}}
 
