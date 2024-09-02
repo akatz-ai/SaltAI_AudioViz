@@ -222,7 +222,7 @@ class SaltAudioFramesyncSchedule:
         if dbfs == -float('inf'):
             return amp_offset
         else:
-            normalized_loudness = (dbfs - dbfs_min) / (dbfs_max - dbfs_min)
+            normalized_loudness = (dbfs - dbfs_min) / (dbfs_max - dbfs_min) if dbfs_max - dbfs_min != 0 else dbfs - dbfs_min
             controlled_loudness = normalized_loudness * amp_control
             adjusted_loudness = controlled_loudness + amp_offset
             return max(amp_offset, min(adjusted_loudness, amp_control + amp_offset))
@@ -251,9 +251,12 @@ class SaltAudioFramesyncSchedule:
         total_length_ms = len(audio_segment)
         total_frames = total_length_ms // frame_duration_ms
         end_ms = total_length_ms if end_frame <= 0 else min(end_frame * frame_duration_ms, total_length_ms)
+        print(f"start_ms: {start_ms}, end_ms: {end_ms}, total_length_ms: {total_length_ms}, total_frames: {total_frames}, frame_duration_ms: {frame_duration_ms}")
 
         audio_segment = audio_segment[start_ms:end_ms]
         dbfs_min, dbfs_max = self.dbfs_floor_ceiling(audio_segment)
+        
+        print(f"dbfs_min: {dbfs_min}, dbfs_max: {dbfs_max}")
 
         output = {'average': {'sum': []}}
 
